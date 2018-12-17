@@ -33,7 +33,7 @@ class GreeterServer(system: ActorSystem) {
     val bound = Http().bindAndHandleAsync(
       service,
       interface = "127.0.0.1",
-      port = 8080,
+      port = 9090,
       connectionContext = HttpConnectionContext(http2 = Always)
     )
 
