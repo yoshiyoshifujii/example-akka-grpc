@@ -2,11 +2,11 @@ package example.myapp.helloworld
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.UseHttp2.Always
-import akka.http.scaladsl.{Http, HttpConnectionContext}
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
+import akka.http.scaladsl.{Http, HttpConnectionContext}
 import akka.stream.{ActorMaterializer, Materializer}
 import com.typesafe.config.ConfigFactory
-import example.myapp.helloworld.grpc.GreeterServiceHandler
+import example.myapp.helloworld.grpc.GreeterHandler
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -28,7 +28,7 @@ class GreeterServer(system: ActorSystem) {
     implicit val ec: ExecutionContext = system.dispatcher
 
     val service: HttpRequest => Future[HttpResponse] =
-      GreeterServiceHandler(new GreeterServiceImpl(mat))
+      GreeterHandler(new GreeterServiceImpl(mat))
 
     val bound = Http().bindAndHandleAsync(
       service,

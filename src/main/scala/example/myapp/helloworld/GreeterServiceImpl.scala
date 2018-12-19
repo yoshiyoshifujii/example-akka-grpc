@@ -2,13 +2,12 @@ package example.myapp.helloworld
 
 import akka.NotUsed
 import akka.stream.Materializer
-import akka.stream.scaladsl.{Sink, Source}
-import example.myapp.helloworld.grpc.{GreeterService, HelloReply, HelloRequest}
+import akka.stream.scaladsl.Source
+import example.myapp.helloworld.grpc.{Greeter, HelloReply, HelloRequest, RepeatHelloRequest}
 
 import scala.concurrent.Future
 
-class GreeterServiceImpl(materializer: Materializer) extends GreeterService {
-  import materializer.executionContext
+class GreeterServiceImpl(materializer: Materializer) extends Greeter {
   private implicit val mat: Materializer = materializer
 
   override def sayHello(in: HelloRequest): Future[HelloReply] = {
@@ -16,20 +15,14 @@ class GreeterServiceImpl(materializer: Materializer) extends GreeterService {
     Future.successful(HelloReply(s"Hello, ${in.name}"))
   }
 
-  override def itKeepsTalking(in: Source[HelloRequest, NotUsed]): Future[HelloReply] = {
-    println(s"sayHello to in stream...")
-    in.runWith(Sink.seq)
-      .map(elements => HelloReply(s"Hello, ${elements.mkString(", ")}"))
-  }
-
-  override def itKeepsReplying(in: HelloRequest): Source[HelloReply, NotUsed] = {
-    println(s"sayHello to ${in.name} with stream of chars...")
+  override def sayRepeatHello(in: RepeatHelloRequest): Source[HelloReply, NotUsed] = {
+    println(s"sayRepeatHello to ${in.name}")
     Source(s"Hello, ${in.name}".toList)
       .map(character => HelloReply(character.toString))
   }
 
-  override def streamHellos(in: Source[HelloRequest, NotUsed]): Source[HelloReply, NotUsed] = {
-    println(s"sayHello to stream...")
-    in.map(request => HelloReply(s"Hello, ${request.name}"))
+  override def sayHelloAfterDelay(in: HelloRequest): Future[HelloReply] = {
+    println(s"sayHelloAfterDelay to ${in.name}")
+    Future.successful(HelloReply(s"Hello, ${in.name}"))
   }
 }
