@@ -3,6 +3,7 @@ lazy val baseName = "example-akka-grpc"
 lazy val root =
   project
     .in(file("."))
+    .enablePlugins(AkkaGrpcPlugin)
     .settings(
       name := s"$baseName",
       organization := "com.github.yoshiyoshifujii",
