@@ -1,15 +1,9 @@
-import Dependencies._
+lazy val baseName = "example-akka-grpc"
 
 lazy val root = (project in file(".")).
-  enablePlugins(AkkaGrpcPlugin).
-  enablePlugins(JavaAgent).
   settings(
-    inThisBuild(List(
-      organization := "com.example",
-      scalaVersion := "2.12.7",
-      version      := "0.1.0-SNAPSHOT"
-    )),
-    name := "example-akka-grpc",
-    libraryDependencies += scalaTest % Test,
-    javaAgents += "org.mortbay.jetty.alpn" % "jetty-alpn-agent" % "2.0.9" % "runtime;test"
+    name := s"$baseName",
+    organization := "com.github.yoshiyoshifujii",
+    scalaVersion := "2.13.5",
+    version      := "0.1"
   )
